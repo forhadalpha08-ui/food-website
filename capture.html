@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h1>Extracting Frames...</h1>
+<video id="v" src="background.mp4" autoplay muted playsinline></video>
+<canvas id="c"></canvas>
+<pre id="log"></pre>
+<script>
+const v = document.getElementById('v');
+const c = document.getElementById('c');
+const log = document.getElementById('log');
+const times = [1, 4, 8, 12, 16, 19];
+let idx = 0;
+
+function print(msg) {
+  log.textContent += msg + '\n';
+  console.log(msg);
+}
+
+v.onloadeddata = () => {
+  print('Video loaded! duration=' + v.duration);
+  c.width = 640;
+  c.height = 360;
+  v.currentTime = times[0];
+};
+
+v.onseeked = () => {
+  print('Seeked to ' + times[idx]);
+  const ctx = c.getContext('2d');
+  ctx.drawImage(v, 0, 0, c.width, c.height);
+  const data = c.toDataURL('image/jpeg', 0.85);
+  fetch('/save-frame', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ time: times[idx], data })
+  }).then(r => r.json()).then(res => {
+    print('Saved frame ' + times[idx] + 's');
+    idx++;
+    if (idx < times.length) {
+      setTimeout(() => { v.currentTime = times[idx]; }, 300);
+    } else {
+      print('ALL FRAMES SAVED!');
+      document.body.style.backgroundColor = 'lightgreen';
+    }
+  }).catch(e => print('Error: ' + e));
+};
+
+v.onerror = (e) => print('Video error: ' + JSON.stringify(e));
+v.load();
+</script>
+</body>
+</html>
