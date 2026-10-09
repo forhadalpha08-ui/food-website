@@ -9,8 +9,8 @@
   --primary-gold-glow: rgba(229, 180, 94, 0.35);
   --text-white: #FAF9FB;
   --text-primary: #EDEBF0;
-  --text-dim: #C4C3CE;
-  --text-muted: #9594A2;
+  --text-dim: #e5e5e5;
+  --text-muted: #d9d9e0;
   --font-display: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
   --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -1171,7 +1171,7 @@ p, li, blockquote {
 .footer-copyright {
   font-size: 0.74rem;
   letter-spacing: 1.5px;
-  color: #787886;
+  color: #cbcbcb;
   text-transform: uppercase;
   text-shadow: 0 1px 6px rgba(0, 0, 0, 0.75);
 }
@@ -1318,10 +1318,9 @@ p, li, blockquote {
 @media (max-width: 860px) {
   .navbar {
     padding: 10px 1rem;
-    background: rgba(209, 118, 0, 0);
     backdrop-filter: blur(0px);
     -webkit-backdrop-filter: blur(0px);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 ;
   }
   .nav-container {
     flex-direction: column;
