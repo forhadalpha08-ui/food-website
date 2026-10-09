@@ -187,7 +187,7 @@ p, li, blockquote {
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 20px;
 }
 
 .nav-link {
@@ -1047,7 +1047,7 @@ p, li, blockquote {
     padding: 12px 1.5rem;
   }
   .nav-links {
-    gap: 3px;
+    gap: 12px;
   }
   .nav-link {
     font-size: 0.78rem;
