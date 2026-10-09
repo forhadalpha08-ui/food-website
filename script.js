@@ -162,11 +162,13 @@ document.addEventListener('DOMContentLoaded', () => {
   // 3. INTERACTIVE CART SYSTEM
   // ==========================================================================
   function updateCartUI() {
-    if (cart.length > 0) {
-      cartCountBadge.style.display = 'inline-flex';
-      cartCountBadge.textContent = cart.length;
-    } else {
-      cartCountBadge.style.display = 'none';
+    if (cartCountBadge) {
+      if (cart.length > 0) {
+        cartCountBadge.style.display = 'inline-flex';
+        cartCountBadge.textContent = cart.length;
+      } else {
+        cartCountBadge.style.display = 'none';
+      }
     }
 
     if (!cartItemsList) return;
