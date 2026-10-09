@@ -170,44 +170,108 @@ document.addEventListener('DOMContentLoaded', () => {
   // 3. INTERACTIVE CART SYSTEM
   // ==========================================================================
   function updateCartUI() {
+    const totalCount = cart.length;
     if (cartCountBadge) {
-      if (cart.length > 0) {
+      if (totalCount > 0) {
         cartCountBadge.style.display = 'inline-flex';
-        cartCountBadge.textContent = cart.length;
+        cartCountBadge.textContent = totalCount;
       } else {
         cartCountBadge.style.display = 'none';
       }
     }
 
-    if (!cartItemsList) return;
-    if (cart.length === 0) {
-      cartItemsList.innerHTML = '<p style="color:#9ca3af; text-align:center; padding:1.5rem 0;">Your cart is empty. Pick a burger from our signature menu!</p>';
-      if (cartTotalVal) cartTotalVal.textContent = '$0.00';
-      return;
+    let subtotal = 0;
+    cart.forEach(item => { subtotal += item.price; });
+    const tax = subtotal * 0.08;
+    const grandTotal = subtotal + tax;
+
+    // Sync Workspace Hub Badges & Summary
+    const hubCartCount = document.getElementById('hubCartCount');
+    const hubCartTotal = document.getElementById('hubCartTotal');
+    const hubOrderBadge = document.getElementById('hubOrderBadge');
+    const hubSubtotalVal = document.getElementById('hubSubtotalVal');
+    const hubTaxVal = document.getElementById('hubTaxVal');
+    const hubGrandTotalVal = document.getElementById('hubGrandTotalVal');
+    const hubOrderItemsList = document.getElementById('hubOrderItemsList');
+
+    if (hubCartCount) hubCartCount.textContent = totalCount;
+    if (hubOrderBadge) hubOrderBadge.textContent = totalCount;
+    if (hubCartTotal) hubCartTotal.textContent = `$${subtotal.toFixed(2)}`;
+    if (hubSubtotalVal) hubSubtotalVal.textContent = `$${subtotal.toFixed(2)}`;
+    if (hubTaxVal) hubTaxVal.textContent = `$${tax.toFixed(2)}`;
+    if (hubGrandTotalVal) hubGrandTotalVal.textContent = `$${grandTotal.toFixed(2)}`;
+
+    // Sync Main Cart Dialog List
+    if (cartItemsList) {
+      if (totalCount === 0) {
+        cartItemsList.innerHTML = '<p style="color:#9ca3af; text-align:center; padding:1.5rem 0;">Your cart is empty. Pick a burger from our signature menu!</p>';
+        if (cartTotalVal) cartTotalVal.textContent = '$0.00';
+      } else {
+        cartItemsList.innerHTML = cart.map((item, idx) => `
+          <div class="cart-item-row">
+            <div>
+              <strong style="color:#fff;">${item.name}</strong>
+              <small style="color:#9ca3af; display:block;">Handcrafted &bull; Fresh Daily</small>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <strong style="color:#f8a825;">$${item.price.toFixed(2)}</strong>
+              <button onclick="removeCartItem(${idx})" style="background:none; border:none; color:#ef4444; cursor:pointer; font-size:1.1rem;" title="Remove">&times;</button>
+            </div>
+          </div>
+        `).join('');
+        if (cartTotalVal) cartTotalVal.textContent = `$${subtotal.toFixed(2)}`;
+      }
     }
 
-    let total = 0;
-    cartItemsList.innerHTML = cart.map((item, idx) => {
-      total += item.price;
-      return `
-        <div class="cart-item-row">
-          <div>
-            <strong style="color:#fff;">${item.name}</strong>
-            <small style="color:#9ca3af; display:block;">Handcrafted &bull; Fresh Daily</small>
-          </div>
-          <div style="display:flex; align-items:center; gap:10px;">
-            <strong style="color:#f8a825;">$${item.price.toFixed(2)}</strong>
-            <button onclick="removeCartItem(${idx})" style="background:none; border:none; color:#ef4444; cursor:pointer; font-size:1.1rem;" title="Remove">&times;</button>
-          </div>
-        </div>
-      `;
-    }).join('');
+    // Sync Workspace Hub Order List
+    if (hubOrderItemsList) {
+      if (totalCount === 0) {
+        hubOrderItemsList.innerHTML = '<p style="color:#9ca3af; text-align:center; padding:2rem 0; font-size:0.86rem;">Your order is empty. Browse dishes in the Explorer tab to add items!</p>';
+      } else {
+        const grouped = {};
+        cart.forEach(item => {
+          if (!grouped[item.name]) {
+            grouped[item.name] = { name: item.name, price: item.price, count: 0 };
+          }
+          grouped[item.name].count++;
+        });
 
-    if (cartTotalVal) cartTotalVal.textContent = `$${total.toFixed(2)}`;
+        hubOrderItemsList.innerHTML = Object.values(grouped).map(item => `
+          <div class="hub-order-row">
+            <div class="hub-order-item-info">
+              <span class="hub-order-item-name">${item.name}</span>
+              <span class="hub-order-item-sub">$${item.price.toFixed(2)} each</span>
+            </div>
+            <div class="hub-order-qty-ctrl">
+              <button class="btn-qty" onclick="changeHubItemQty('${item.name.replace(/'/g, "\\'")}', -1)" title="Decrease">&minus;</button>
+              <span class="qty-display">${item.count}</span>
+              <button class="btn-qty" onclick="changeHubItemQty('${item.name.replace(/'/g, "\\'")}', 1)" title="Increase">&plus;</button>
+            </div>
+            <span class="hub-order-row-price">$${(item.price * item.count).toFixed(2)}</span>
+          </div>
+        `).join('');
+      }
+    }
   }
 
   window.removeCartItem = function(idx) {
     cart.splice(idx, 1);
+    updateCartUI();
+  };
+
+  window.changeHubItemQty = function(itemName, delta) {
+    if (delta > 0) {
+      // Find item price from existing cart or database
+      const existing = cart.find(i => i.name === itemName);
+      if (existing) {
+        cart.push({ name: existing.name, price: existing.price });
+      }
+    } else if (delta < 0) {
+      const idx = cart.findIndex(i => i.name === itemName);
+      if (idx !== -1) {
+        cart.splice(idx, 1);
+      }
+    }
     updateCartUI();
   };
 
@@ -333,53 +397,312 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ==========================================================================
-  // 7. COLLAPSIBLE ROUND ICON NAVBAR & EXPANDED FLOATING ISLAND SYSTEM
+  // 7. COLLAPSIBLE ROUND ICON NAVBAR & WORKSPACE HUB CONTROLS
   // ==========================================================================
-  // Click round toggle icon to unfold the floating island menu
-  if (navRoundToggle && navbar) {
+  const navHubWindow = document.getElementById('navHubWindow');
+  const navHubTriggerBtn = document.getElementById('navHubTriggerBtn');
+  const hubCloseBtn = document.getElementById('hubCloseBtn');
+  const hubCartPillBtn = document.getElementById('hubCartPillBtn');
+  const hubTabBtns = document.querySelectorAll('.hub-tab-btn');
+  const hubTabPanes = document.querySelectorAll('.hub-tab-pane');
+  const hubDishSearch = document.getElementById('hubDishSearch');
+  const hubSearchClear = document.getElementById('hubSearchClear');
+  const hubCategoryPills = document.querySelectorAll('.hub-cat-pill');
+  const hubDishesGrid = document.getElementById('hubDishesGrid');
+  const hubClearCartBtn = document.getElementById('hubClearCartBtn');
+  const hubCheckoutBtn = document.getElementById('hubCheckoutBtn');
+  const hubReserveForm = document.getElementById('hubReserveForm');
+  const reserveSuccessMsg = document.getElementById('reserveSuccessMsg');
+
+  function openHubWindow() {
+    if (navHubWindow) {
+      navHubWindow.classList.add('open');
+      if (navbar) navbar.classList.add('hub-open');
+      if (navBackdropScrim) navBackdropScrim.classList.add('hub-active');
+      renderHubDishes();
+      updateCartUI();
+    }
+  }
+
+  function closeHubWindow() {
+    if (navHubWindow) {
+      navHubWindow.classList.remove('open');
+      if (navbar) navbar.classList.remove('hub-open');
+      if (navBackdropScrim) navBackdropScrim.classList.remove('hub-active');
+    }
+  }
+
+  // Click round toggle icon: Open the Hub Window!
+  if (navRoundToggle) {
     navRoundToggle.addEventListener('click', (e) => {
       e.stopPropagation();
-      navbar.classList.toggle('nav-expanded');
+      if (navHubWindow && navHubWindow.classList.contains('open')) {
+        closeHubWindow();
+      } else {
+        openHubWindow();
+      }
     });
   }
 
-  // Close button inside floating island
-  if (navFloatingClose && navbar) {
-    navFloatingClose.addEventListener('click', (e) => {
+  // Workspace trigger button on top bar
+  if (navHubTriggerBtn) {
+    navHubTriggerBtn.addEventListener('click', (e) => {
       e.stopPropagation();
-      navbar.classList.remove('nav-expanded');
+      openHubWindow();
     });
   }
 
-  // Click backdrop scrim to dismiss floating island
-  if (navBackdropScrim && navbar) {
+  // Close button inside Hub
+  if (hubCloseBtn) {
+    hubCloseBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeHubWindow();
+    });
+  }
+
+  // Close when clicking the backdrop scrim
+  if (navBackdropScrim) {
     navBackdropScrim.addEventListener('click', () => {
-      navbar.classList.remove('nav-expanded');
+      closeHubWindow();
+      if (navbar) navbar.classList.remove('nav-expanded');
     });
   }
 
-  // Dismiss floating island if clicking anywhere outside the menu container
+  // Escape key closes both Hub and expanded navbar
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeHubWindow();
+      if (navbar) navbar.classList.remove('nav-expanded');
+    }
+  });
+
+  // Click outside Hub closes it (clicking inside NEVER closes it)
   document.addEventListener('click', (e) => {
-    if (navbar && navbar.classList.contains('nav-expanded')) {
-      if (navContainer && !navContainer.contains(e.target) && !navRoundToggle.contains(e.target)) {
-        navbar.classList.remove('nav-expanded');
+    if (navHubWindow && navHubWindow.classList.contains('open')) {
+      if (!navHubWindow.contains(e.target) && !navRoundToggle.contains(e.target) && (!navHubTriggerBtn || !navHubTriggerBtn.contains(e.target))) {
+        closeHubWindow();
       }
     }
   });
 
-  // Dismiss floating island with Escape key
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && navbar && navbar.classList.contains('nav-expanded')) {
-      navbar.classList.remove('nav-expanded');
-    }
-  });
+  // Hub Header Cart pill switches to Order Tab
+  if (hubCartPillBtn) {
+    hubCartPillBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      switchHubTab('orderTab');
+    });
+  }
 
-  // Automatically close floating island when any menu link is clicked so user sees the section
-  allNavLinks.forEach(link => {
-    link.addEventListener('click', () => {
-      if (navbar && navbar.classList.contains('nav-expanded')) {
-        navbar.classList.remove('nav-expanded');
+  // Hub Tab switching function
+  function switchHubTab(targetTabId) {
+    hubTabBtns.forEach(btn => {
+      if (btn.getAttribute('data-tab') === targetTabId) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
       }
     });
+    hubTabPanes.forEach(pane => {
+      if (pane.id === targetTabId) {
+        pane.classList.add('active');
+      } else {
+        pane.classList.remove('active');
+      }
+    });
+  }
+
+  hubTabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = btn.getAttribute('data-tab');
+      switchHubTab(target);
+    });
   });
+
+  // Quick navigation items inside Hub: jump to section and close Hub
+  const hubNavItems = document.querySelectorAll('.hub-nav-item');
+  hubNavItems.forEach(item => {
+    item.addEventListener('click', () => {
+      closeHubWindow();
+    });
+  });
+
+  // ==========================================================================
+  // DISHES DATA & REAL-TIME DISCOVERY ENGINE INSIDE HUB
+  // ==========================================================================
+  const hubDishes = [
+    { name: 'Classic Cheeseburger', cat: 'beef', price: 8.99, badge: '★ Bestseller', desc: 'Flame-seared Angus beef, aged sharp cheddar, butter lettuce, secret sauce' },
+    { name: 'Bacon Deluxe', cat: 'beef', price: 10.99, badge: '🥓 Smoked Bacon', desc: 'Double beef patty, aged cheddar, applewood bacon, crispy onions, bourbon BBQ' },
+    { name: 'Spicy Jalapeño', cat: 'spicy', price: 9.99, badge: '🔥 Hot Pick', desc: 'Pepper jack, charred jalapeños, smoked chipotle aioli, crispy brioche' },
+    { name: 'Truffle Mushroom', cat: 'beef', price: 11.49, badge: '🍄 Gourmet', desc: 'Sautéed cremini mushrooms, black truffle glaze, melted swiss' },
+    { name: 'Truffle Tagliatelle', cat: 'pasta', price: 14.50, badge: '🍝 Handcrafted', desc: 'Hand-rolled egg pasta, shaved black summer truffles, parmesan emulsion' },
+    { name: 'Rigatoni Bolognese', cat: 'pasta', price: 13.20, badge: '🍝 Classic', desc: 'Slow-simmered beef ragù, san marzano tomatoes, aged pecorino' },
+    { name: 'Stone Margherita', cat: 'pizza', price: 12.00, badge: '🍕 Wood-Fired', desc: 'San Marzano DOP tomatoes, buffalo mozzarella, fresh sweet basil' },
+    { name: 'Prosciutto & Fig Pizza', cat: 'pizza', price: 15.50, badge: '🍕 Artisanal', desc: '24-month Parma prosciutto, wild figs, gorgonzola crema, balsamic reduction' },
+    { name: 'Chocolate Lava Cake', cat: 'dessert', price: 6.50, badge: '🍫 Sweet', desc: 'Warm molten Valrhona ganache center with Madagascar vanilla bean gelato' },
+    { name: 'Tiramisu Classico', cat: 'dessert', price: 7.00, badge: '🍰 Italian', desc: 'Espresso-soaked ladyfingers, velvety mascarpone cream, dark cocoa dust' },
+    { name: 'Craft Nitro Cold Brew', cat: 'drinks', price: 5.00, badge: '☕ Brew', desc: 'Single-origin Ethiopian beans steeped 24h, velvet cascading crema' },
+    { name: 'Sparkling Peach Fizz', cat: 'drinks', price: 4.50, badge: '🍑 Refresh', desc: 'White peach purée, handcrafted herbal tonic, fresh rosemary sprig' }
+  ];
+
+  let currentHubCategory = 'all';
+  let currentHubSearchQuery = '';
+
+  function renderHubDishes() {
+    if (!hubDishesGrid) return;
+    const query = currentHubSearchQuery.toLowerCase().trim();
+    const filtered = hubDishes.filter(dish => {
+      const matchCat = (currentHubCategory === 'all' || dish.cat === currentHubCategory);
+      const matchQuery = !query || dish.name.toLowerCase().includes(query) || dish.desc.toLowerCase().includes(query);
+      return matchCat && matchQuery;
+    });
+
+    if (filtered.length === 0) {
+      hubDishesGrid.innerHTML = `
+        <div style="grid-column: 1 / -1; text-align: center; padding: 2.5rem 1rem; color: #9ca3af;">
+          <p style="font-size: 1.1rem; margin-bottom: 0.5rem;">No dishes match "${currentHubSearchQuery}"</p>
+          <small>Try searching for "burger", "pasta", "pizza", or "truffle"</small>
+        </div>
+      `;
+      return;
+    }
+
+    hubDishesGrid.innerHTML = filtered.map(dish => `
+      <div class="hub-dish-card">
+        <div class="hub-dish-top">
+          <div style="flex:1;">
+            <h4 class="hub-dish-name">${dish.name}</h4>
+            <p class="hub-dish-desc">${dish.desc}</p>
+          </div>
+          <span class="hub-dish-cat-badge">${dish.badge}</span>
+        </div>
+        <div class="hub-dish-bottom">
+          <span class="hub-dish-price">$${dish.price.toFixed(2)}</span>
+          <button class="btn-hub-add" onclick="addDishFromHub('${dish.name.replace(/'/g, "\\'")}', ${dish.price})">
+            &plus; Add to Order
+          </button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  window.addDishFromHub = function(name, price) {
+    cart.push({ name, price });
+    updateCartUI();
+
+    // Button animation feedback
+    if (window.event && window.event.target) {
+      const btn = window.event.target;
+      const orig = btn.innerHTML;
+      btn.innerHTML = '✓ Added!';
+      btn.style.background = '#22c55e';
+      btn.style.color = '#111116';
+      setTimeout(() => {
+        btn.innerHTML = orig;
+        btn.style.background = '';
+        btn.style.color = '';
+      }, 900);
+    }
+  };
+
+  // Search input listeners
+  if (hubDishSearch) {
+    hubDishSearch.addEventListener('input', (e) => {
+      currentHubSearchQuery = e.target.value;
+      if (hubSearchClear) {
+        hubSearchClear.style.display = currentHubSearchQuery ? 'block' : 'none';
+      }
+      renderHubDishes();
+    });
+  }
+
+  if (hubSearchClear) {
+    hubSearchClear.addEventListener('click', () => {
+      hubDishSearch.value = '';
+      currentHubSearchQuery = '';
+      hubSearchClear.style.display = 'none';
+      renderHubDishes();
+      hubDishSearch.focus();
+    });
+  }
+
+  // Category filter chips inside Hub
+  hubCategoryPills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      hubCategoryPills.forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      currentHubCategory = pill.getAttribute('data-cat');
+      renderHubDishes();
+    });
+  });
+
+  // Hub Clear Order button
+  if (hubClearCartBtn) {
+    hubClearCartBtn.addEventListener('click', () => {
+      if (cart.length === 0) return;
+      if (confirm('Are you sure you want to clear your current order?')) {
+        cart.length = 0;
+        updateCartUI();
+      }
+    });
+  }
+
+  // Hub Checkout button
+  if (hubCheckoutBtn) {
+    hubCheckoutBtn.addEventListener('click', () => {
+      if (cart.length === 0) {
+        alert('Your order is empty. Please add items before checking out!');
+        return;
+      }
+      hubCheckoutBtn.textContent = '✓ Order Placed! Kitchen Notified';
+      hubCheckoutBtn.style.background = '#22c55e';
+      setTimeout(() => {
+        cart.length = 0;
+        updateCartUI();
+        hubCheckoutBtn.textContent = 'Proceed to Checkout';
+        hubCheckoutBtn.style.background = '';
+        switchHubTab('orderTab');
+      }, 1800);
+    });
+  }
+
+  // Table reservation form listeners
+  const guestPills = document.querySelectorAll('.guest-pill');
+  guestPills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      guestPills.forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+    });
+  });
+
+  const timePills = document.querySelectorAll('.time-pill');
+  timePills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      timePills.forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+    });
+  });
+
+  if (hubReserveForm) {
+    hubReserveForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const activeGuest = document.querySelector('.guest-pill.active')?.getAttribute('data-guests') || '2';
+      const activeTime = document.querySelector('.time-pill.active')?.getAttribute('data-time') || '7:00 PM';
+      const seating = document.getElementById('reserveSeating')?.value || 'Main Dining Room';
+      const name = document.getElementById('reserveName')?.value || 'Guest';
+
+      const bookingRef = 'FIP-' + Math.floor(1000 + Math.random() * 9000);
+      if (reserveSuccessMsg) {
+        reserveSuccessMsg.style.display = 'block';
+        reserveSuccessMsg.innerHTML = `
+          <strong>🎉 Table Reserved for ${name}!</strong><br>
+          Party of ${activeGuest} &bull; ${activeTime} &bull; ${seating}<br>
+          <span style="color:#FAF9FB; font-weight:700;">Reference #${bookingRef}</span> &bull; Confirmation SMS sent.
+        `;
+      }
+      document.getElementById('reserveName').value = '';
+    });
+  }
+
+  // Initial dishes render
+  renderHubDishes();
 });
