@@ -1096,10 +1096,50 @@ p, li, blockquote {
 /* Tablet & Mobile Landscape (max-width: 860px) */
 @media (max-width: 860px) {
   .navbar {
-    padding: 14px 1.5rem;
+    padding: 10px 1rem;
+    background: rgba(8, 12, 22, 0.45);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(24px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  }
+  .nav-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+  }
+  .proroz-brand-logo {
+    transform: scale(0.88);
   }
   .nav-links {
-    display: none;
+    display: flex !important;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 5px 8px;
+    width: 100%;
+  }
+  .nav-link {
+    font-size: 0.74rem;
+    padding: 3.5px 8px;
+    letter-spacing: 0.2px;
+    border-radius: 2px;
+    gap: 4px;
+  }
+  .nav-link.nav-home-active svg {
+    width: 11px;
+    height: 11px;
+  }
+  .submenu-link {
+    font-size: 0.74rem;
+    padding: 3.5px 8px;
+  }
+  .nav-submenu-list {
+    min-width: 110px;
+    gap: 2px;
+  }
+  .hero-section {
+    padding: 155px 1.5rem 70px;
   }
   .hero-home-title {
     font-size: clamp(2.8rem, 9.5vw, 4.4rem);
@@ -1151,17 +1191,36 @@ p, li, blockquote {
 /* Mobile Screens (max-width: 600px) */
 @media (max-width: 600px) {
   .navbar {
-    padding: 12px 1rem;
+    padding: 8px 0.5rem;
+  }
+  .nav-container {
+    gap: 6px;
   }
   .proroz-brand-text {
-    font-size: 1.2rem;
+    font-size: 1.15rem;
   }
   .brand-cups-icon svg {
-    width: 54px;
-    height: 30px;
+    width: 48px;
+    height: 26px;
+  }
+  .nav-links {
+    gap: 4px 6px;
+  }
+  .nav-link {
+    font-size: 0.68rem;
+    padding: 2.5px 6px;
+    gap: 3px;
+  }
+  .nav-link.nav-home-active svg {
+    width: 9px;
+    height: 9px;
+  }
+  .submenu-link {
+    font-size: 0.68rem;
+    padding: 2.5px 6px;
   }
   .hero-section {
-    padding: 100px 1rem 60px;
+    padding: 145px 1rem 60px;
   }
   .hero-home-title {
     font-size: clamp(2.3rem, 10vw, 3.4rem);
@@ -1319,6 +1378,17 @@ p, li, blockquote {
 
 /* Extra Small Phones (max-width: 380px) */
 @media (max-width: 380px) {
+  .nav-links {
+    gap: 3px 4px;
+  }
+  .nav-link {
+    font-size: 0.62rem;
+    padding: 2px 5px;
+  }
+  .submenu-link {
+    font-size: 0.62rem;
+    padding: 2px 5px;
+  }
   .title-white,
   .title-gold {
     font-size: 2.35rem;
