@@ -1,6 +1,6 @@
-# 🍔 Burger Haven - Artisanal Food Website
+# ☕ FipPzo - Artisanal Food & Recipe Website
 
-A modern, high-performance artisanal food & restaurant website with smooth **120fps scroll-driven video background scrubbing**, responsive capsule navigation dock, interactive food menu with filtering, and real-time cart order drawer.
+A modern, high-performance artisanal food & recipe website with smooth **120fps scroll-driven video background scrubbing**, elegant gourmet navigation bar with background reveal hover, submenus, and interactive food menu.
 
 ---
 

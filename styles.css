@@ -130,14 +130,14 @@ p, li, blockquote {
   align-items: center;
   justify-content: center;
   padding: 22px 3.5rem;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0) 100%);
+  background: rgba(0, 0, 0, 0);
   transition: var(--transition-smooth);
 }
 
 .navbar.scrolled {
-  background: rgba(8, 12, 22, 0.88);
+  background: rgba(8, 12, 22, 0.3);
   backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(24px);
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.55);
   padding: 14px 3.5rem;
 }
@@ -826,11 +826,18 @@ p, li, blockquote {
   margin-bottom: 1.5rem;
 }
 
+.footer-cups-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.7));
+}
+
 .footer-brand-title {
-  font-family: var(--font-display);
-  font-size: 1.05rem;
-  font-weight: 800;
-  letter-spacing: 2px;
+  font-family: var(--font-serif);
+  font-size: 1.45rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
   color: #ffffff;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.85);
 }

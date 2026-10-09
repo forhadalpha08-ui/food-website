@@ -1,6 +1,6 @@
 /**
- * BURGER HAVEN - Good Food. Great Mood.
- * 120fps Canvas Video Scrubbing Engine + Interactive Cart & Audio System
+ * FipPzo - Good Food. Great Mood.
+ * 120fps Canvas Video Scrubbing Engine + Interactive Menu & Audio System
  */
 
 document.addEventListener('DOMContentLoaded', () => {
