@@ -83,10 +83,6 @@
             <li><a href="#menu" class="submenu-link">Sandwich</a></li>
           </ul>
         </div>
-        <button class="nav-hub-trigger-btn" id="navHubTriggerBtn" title="Open Dining & Kitchen Workspace Hub">
-          <span class="hub-trigger-dot"></span>
-          <span>Workspace</span>
-        </button>
       </nav>
 
       <!-- Close button when floating island is open -->
@@ -94,7 +90,7 @@
     </div>
 
     <!-- Floating Round Icon Button (Collapsed Navigation Emblem) -->
-    <button class="nav-round-toggle" id="navRoundToggle" aria-label="Open FipPzo Workspace Hub" title="Open FipPzo Workspace Hub">
+    <button class="nav-round-toggle" id="navRoundToggle" aria-label="Open FipPzo Menu" title="Open FipPzo Menu">
       <div class="round-toggle-inner">
         <svg class="round-toggle-svg" width="32" height="19" viewBox="0 0 110 65" fill="none" xmlns="http://www.w3.org/2000/svg">
           <ellipse cx="32" cy="48" rx="24" ry="5.5" stroke="#ffffff" stroke-width="3.2" fill="none"/>
@@ -117,165 +113,6 @@
       </div>
       <div class="round-pulse-ring"></div>
     </button>
-
-    <!-- Interactive FipPzo Workspace & Dining Hub Window (Work and Manage in this Window) -->
-    <div class="nav-hub-window" id="navHubWindow" role="dialog" aria-modal="true" aria-label="FipPzo Workspace and Dining Hub">
-      <!-- Hub Window Topbar -->
-      <div class="hub-header">
-        <div class="hub-brand-block">
-          <div class="hub-cups-logo">
-            <svg width="34" height="20" viewBox="0 0 110 65" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <ellipse cx="32" cy="48" rx="24" ry="5.5" stroke="#ffffff" stroke-width="3.2" fill="none"/>
-              <path d="M14 24 C14 41, 50 41, 50 24" stroke="#ffffff" stroke-width="3.2" fill="rgba(255,255,255,0.06)"/>
-              <ellipse cx="32" cy="24" rx="18" ry="5" stroke="#ffffff" stroke-width="3.2" fill="none"/>
-              <path d="M14 26 C6 26, 6 36, 16 37" stroke="#ffffff" stroke-width="2.8" stroke-linecap="round" fill="none"/>
-              <path d="M32 20.5 C30.5 18, 27 18, 26 19.8 C24.5 21.6, 32 27, 32 27 C32 27, 39.5 21.6, 38 19.8 C37 18, 33.5 18, 32 20.5 Z" fill="#F8A825"/>
-              <ellipse cx="72" cy="52" rx="26" ry="6" stroke="#ffffff" stroke-width="3.2" fill="none"/>
-              <path d="M54 28 C54 45, 90 45, 90 28" stroke="#ffffff" stroke-width="3.2" fill="rgba(255,255,255,0.06)"/>
-              <ellipse cx="72" cy="28" rx="18" ry="5" stroke="#ffffff" stroke-width="3.2" fill="none"/>
-              <path d="M90 30 C98 30, 98 40, 88 41" stroke="#ffffff" stroke-width="2.8" stroke-linecap="round" fill="none"/>
-              <path d="M72 24.5 C70.5 22, 67 22, 66 23.8 C64.5 25.6, 72 31, 72 31 C72 31, 79.5 25.6, 78 23.8 C77 22, 73.5 22, 72 24.5 Z" fill="#F8A825"/>
-            </svg>
-          </div>
-          <div class="hub-brand-meta">
-            <h3 class="hub-brand-title">FipPzo <span class="hub-pill-badge">Workspace Hub</span></h3>
-            <span class="hub-status-text"><span class="hub-pulse-dot"></span> Kitchen Active &bull; Avg Prep 15m</span>
-          </div>
-        </div>
-
-        <div class="hub-header-actions">
-          <button class="hub-cart-summary-btn" id="hubCartPillBtn" title="Switch to Order Manager Tab">
-            <span class="cart-icon-text">🛒 Order:</span>
-            <span class="hub-cart-badge" id="hubCartCount">0</span>
-            <strong class="hub-cart-val" id="hubCartTotal">$0.00</strong>
-          </button>
-          <button class="hub-close-btn" id="hubCloseBtn" aria-label="Close Hub Window" title="Close Window (Esc)">&times;</button>
-        </div>
-      </div>
-
-      <!-- Quick Navigation Strip (Immediate Jump to Main Website Sections) -->
-      <div class="hub-quick-nav">
-        <a href="#hero" class="hub-nav-item"><span>🏠</span> Home</a>
-        <a href="#features" class="hub-nav-item"><span>✨</span> About Craft</a>
-        <a href="#menu" class="hub-nav-item"><span>🍔</span> Main Menu</a>
-        <a href="#manifesto" class="hub-nav-item"><span>📜</span> Chef Story</a>
-        <a href="#footer" class="hub-nav-item"><span>📍</span> Hours &amp; Location</a>
-      </div>
-
-      <!-- Hub Workspace Navigation Tabs -->
-      <div class="hub-tab-bar">
-        <button class="hub-tab-btn active" data-tab="menuTab">
-          <span>🍽️</span> Dish Explorer &amp; Quick Add
-        </button>
-        <button class="hub-tab-btn" data-tab="orderTab">
-          <span>🛒</span> Live Order Manager (<span id="hubOrderBadge">0</span>)
-        </button>
-        <button class="hub-tab-btn" data-tab="reserveTab">
-          <span>📅</span> Table Reservation
-        </button>
-      </div>
-
-      <!-- Tab Content 1: Dish Explorer & Quick Add -->
-      <div class="hub-tab-pane active" id="menuTab">
-        <div class="hub-search-filter-box">
-          <div class="hub-search-input-wrap">
-            <svg class="hub-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input type="text" class="hub-search-input" id="hubDishSearch" placeholder="Search burgers, pasta, pizza, desserts..." autocomplete="off">
-            <button class="hub-search-clear-btn" id="hubSearchClear" style="display:none;" title="Clear search">&times;</button>
-          </div>
-          <div class="hub-category-pills" id="hubCategoryPills">
-            <button class="hub-cat-pill active" data-cat="all">All Items</button>
-            <button class="hub-cat-pill" data-cat="beef">🍔 Burgers</button>
-            <button class="hub-cat-pill" data-cat="spicy">🌶️ Spicy</button>
-            <button class="hub-cat-pill" data-cat="pasta">🍝 Pasta</button>
-            <button class="hub-cat-pill" data-cat="pizza">🍕 Pizza</button>
-            <button class="hub-cat-pill" data-cat="dessert">🍰 Desserts</button>
-            <button class="hub-cat-pill" data-cat="drinks">☕ Drinks</button>
-          </div>
-        </div>
-
-        <div class="hub-dishes-grid" id="hubDishesGrid">
-          <!-- Dynamically populated and filtered -->
-        </div>
-      </div>
-
-      <!-- Tab Content 2: Live Order Manager -->
-      <div class="hub-tab-pane" id="orderTab">
-        <div class="hub-order-manager">
-          <div class="hub-order-items-list" id="hubOrderItemsList">
-            <!-- Dynamically populated with order rows -->
-          </div>
-          <div class="hub-order-summary-box">
-            <div class="hub-summary-row">
-              <span>Subtotal</span>
-              <strong id="hubSubtotalVal">$0.00</strong>
-            </div>
-            <div class="hub-summary-row">
-              <span>Estimated Tax (8%)</span>
-              <span id="hubTaxVal">$0.00</span>
-            </div>
-            <div class="hub-summary-row total-highlight">
-              <span>Grand Total</span>
-              <strong class="gold-text" id="hubGrandTotalVal">$0.00</strong>
-            </div>
-            <div class="hub-order-actions-row">
-              <button class="btn-hub-clear" id="hubClearCartBtn">Clear Order</button>
-              <button class="btn-hub-checkout" id="hubCheckoutBtn">Proceed to Checkout</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Tab Content 3: Table Reservation -->
-      <div class="hub-tab-pane" id="reserveTab">
-        <form class="hub-reserve-form" id="hubReserveForm">
-          <div class="reserve-grid">
-            <div class="reserve-field">
-              <label class="reserve-label">Party Size</label>
-              <div class="guest-selector-pills" id="guestPills">
-                <button type="button" class="guest-pill active" data-guests="2">2 Guests</button>
-                <button type="button" class="guest-pill" data-guests="4">4 Guests</button>
-                <button type="button" class="guest-pill" data-guests="6">6 Guests</button>
-                <button type="button" class="guest-pill" data-guests="8+">8+ VIP</button>
-              </div>
-            </div>
-            <div class="reserve-field">
-              <label class="reserve-label">Seating Atmosphere</label>
-              <select class="hub-select" id="reserveSeating">
-                <option value="Main Dining Room">Main Dining Room (Vibrant &amp; Cozy)</option>
-                <option value="Chef's Counter">Chef's Counter (Live Kitchen View)</option>
-                <option value="Open-Air Terrace">Open-Air Romantic Terrace</option>
-                <option value="VIP Wine Vault">Private VIP Wine Vault</option>
-              </select>
-            </div>
-            <div class="reserve-field">
-              <label class="reserve-label">Available Seating Time Today</label>
-              <div class="time-selector-pills" id="timePills">
-                <button type="button" class="time-pill active" data-time="12:30 PM">12:30 PM</button>
-                <button type="button" class="time-pill" data-time="1:45 PM">1:45 PM</button>
-                <button type="button" class="time-pill" data-time="7:00 PM">7:00 PM</button>
-                <button type="button" class="time-pill" data-time="8:30 PM">8:30 PM</button>
-                <button type="button" class="time-pill" data-time="9:45 PM">9:45 PM</button>
-              </div>
-            </div>
-            <div class="reserve-field">
-              <label class="reserve-label">Your Name &amp; Contact</label>
-              <input type="text" class="hub-input" id="reserveName" placeholder="Full name or phone number" required>
-            </div>
-          </div>
-          <button type="submit" class="btn-hub-reserve-submit" id="hubReserveSubmit">
-            ✨ Confirm Instant Table Booking
-          </button>
-          <div class="reserve-success-msg" id="reserveSuccessMsg" style="display:none;"></div>
-        </form>
-      </div>
-
-      <!-- Hub Footer Status Bar -->
-      <div class="hub-footer-status">
-        <span>📍 442 Artisan Blvd &bull; ☎ +1 (800) FIPPZO &bull; 🕒 10:00 AM &ndash; 11:00 PM</span>
-        <span class="hub-tip">Tip: Press <kbd>Esc</kbd> or click outside to minimize window</span>
-      </div>
-    </div>
   </header>
 
   <!-- Page Flow with Background Video Scrubbing -->
