@@ -129,17 +129,17 @@ p, li, blockquote {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 22px 3.5rem;
+  padding: 14px 3rem;
   background: rgba(0, 0, 0, 0);
   transition: var(--transition-smooth);
 }
 
 .navbar.scrolled {
-  background: rgba(8, 12, 22, 0.3);
+  background: rgba(8, 12, 22, 0.4);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(24px);
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.55);
-  padding: 14px 3.5rem;
+  padding: 10px 3rem;
 }
 
 .nav-container {
@@ -175,7 +175,7 @@ p, li, blockquote {
 
 .proroz-brand-text {
   font-family: var(--font-serif);
-  font-size: 1.45rem;
+  font-size: 1.3rem;
   font-weight: 700;
   letter-spacing: 0.5px;
   color: #ffffff;
@@ -187,22 +187,22 @@ p, li, blockquote {
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
 }
 
 .nav-link {
   text-decoration: none;
   color: #ffffff;
   font-family: var(--font-serif);
-  font-size: 1.02rem;
+  font-size: 0.84rem;
   font-weight: 600;
-  letter-spacing: 0.3px;
-  padding: 7px 18px;
+  letter-spacing: 0.4px;
+  padding: 5px 12px;
   border-radius: 2px;
   background: transparent;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   transition: background 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
               color 0.25s ease, 
               box-shadow 0.25s ease, 
@@ -225,8 +225,8 @@ p, li, blockquote {
 
 .nav-link.nav-home-active svg {
   fill: currentColor;
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
 }
 
 /* Dropdown Wrapper for ▾ More Recipes */
@@ -247,16 +247,16 @@ p, li, blockquote {
   position: absolute;
   top: 100%;
   left: 0;
-  min-width: 140px;
+  min-width: 120px;
   list-style: none;
-  padding: 6px 0 0 0;
+  padding: 4px 0 0 0;
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 3px;
   opacity: 0;
   visibility: hidden;
-  transform: translateY(6px);
+  transform: translateY(4px);
   transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1), 
               transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), 
               visibility 0.22s cubic-bezier(0.16, 1, 0.3, 1);
@@ -284,10 +284,10 @@ p, li, blockquote {
   text-decoration: none;
   color: #ffffff;
   font-family: var(--font-serif);
-  font-size: 1.02rem;
+  font-size: 0.84rem;
   font-weight: 600;
-  letter-spacing: 0.3px;
-  padding: 6px 18px;
+  letter-spacing: 0.4px;
+  padding: 5px 12px;
   border-radius: 2px;
   background: transparent;
   transition: background 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
@@ -1044,14 +1044,14 @@ p, li, blockquote {
 /* Laptop & Tablet Large (max-width: 1100px) */
 @media (max-width: 1100px) {
   .navbar {
-    padding: 16px 2rem;
+    padding: 12px 1.5rem;
   }
   .nav-links {
-    gap: 8px;
+    gap: 3px;
   }
   .nav-link {
-    font-size: 0.94rem;
-    padding: 6px 12px;
+    font-size: 0.78rem;
+    padding: 4px 9px;
   }
   .stats-container {
     grid-template-columns: repeat(2, 1fr);
