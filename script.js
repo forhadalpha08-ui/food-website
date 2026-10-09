@@ -8,7 +8,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('scrollCanvas');
   const ctx = canvas ? canvas.getContext('2d') : null;
   const navbar = document.getElementById('navbar');
+  const navContainer = document.getElementById('navContainer');
+  const navRoundToggle = document.getElementById('navRoundToggle');
+  const navFloatingClose = document.getElementById('navFloatingClose');
+  const navBackdropScrim = document.getElementById('navBackdropScrim');
   const navLinks = document.querySelectorAll('.nav-link');
+  const allNavLinks = document.querySelectorAll('.nav-link, .submenu-link');
   const scrollProgressBar = document.getElementById('scrollProgressBar');
   const glowCursor = document.getElementById('glowCursor');
   const filterButtons = document.querySelectorAll('.filter-pill-btn');
@@ -112,12 +117,15 @@ document.addEventListener('DOMContentLoaded', () => {
       scrollProgressBar.style.width = `${(progress * 100).toFixed(1)}%`;
     }
 
-    // Header scroll background
+    // Header scroll background & collapsible round toggle behavior
     if (navbar) {
-      if (scrollY > 50) {
+      if (scrollY > 90) {
         navbar.classList.add('scrolled');
+        navbar.classList.add('nav-collapsed');
       } else {
         navbar.classList.remove('scrolled');
+        navbar.classList.remove('nav-collapsed');
+        navbar.classList.remove('nav-expanded');
       }
     }
 
@@ -323,4 +331,55 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
+  // ==========================================================================
+  // 7. COLLAPSIBLE ROUND ICON NAVBAR & EXPANDED FLOATING ISLAND SYSTEM
+  // ==========================================================================
+  // Click round toggle icon to unfold the floating island menu
+  if (navRoundToggle && navbar) {
+    navRoundToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      navbar.classList.toggle('nav-expanded');
+    });
+  }
+
+  // Close button inside floating island
+  if (navFloatingClose && navbar) {
+    navFloatingClose.addEventListener('click', (e) => {
+      e.stopPropagation();
+      navbar.classList.remove('nav-expanded');
+    });
+  }
+
+  // Click backdrop scrim to dismiss floating island
+  if (navBackdropScrim && navbar) {
+    navBackdropScrim.addEventListener('click', () => {
+      navbar.classList.remove('nav-expanded');
+    });
+  }
+
+  // Dismiss floating island if clicking anywhere outside the menu container
+  document.addEventListener('click', (e) => {
+    if (navbar && navbar.classList.contains('nav-expanded')) {
+      if (navContainer && !navContainer.contains(e.target) && !navRoundToggle.contains(e.target)) {
+        navbar.classList.remove('nav-expanded');
+      }
+    }
+  });
+
+  // Dismiss floating island with Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && navbar && navbar.classList.contains('nav-expanded')) {
+      navbar.classList.remove('nav-expanded');
+    }
+  });
+
+  // Automatically close floating island when any menu link is clicked so user sees the section
+  allNavLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      if (navbar && navbar.classList.contains('nav-expanded')) {
+        navbar.classList.remove('nav-expanded');
+      }
+    });
+  });
 });
