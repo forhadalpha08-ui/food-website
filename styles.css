@@ -183,11 +183,11 @@ p, li, blockquote {
   text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
 }
 
-/* Center Nav Links (PraRoz Image Style) */
+/* Center Nav Links (PraRoz Image Style with Background Reveal Hover) */
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 22px;
+  gap: 6px;
 }
 
 .nav-link {
@@ -197,34 +197,29 @@ p, li, blockquote {
   font-size: 1.02rem;
   font-weight: 600;
   letter-spacing: 0.3px;
-  transition: var(--transition-smooth);
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.85);
-  padding: 6px 4px;
-}
-
-.nav-link:hover,
-.nav-link.active:not(.nav-home-active) {
-  color: #f8a825;
-  transform: translateY(-1px);
-}
-
-/* Solid White Tab for Active Home Link (Matching Image Box) */
-.nav-link.nav-home-active {
-  background: #ffffff;
-  color: #111116 !important;
-  padding: 6px 18px;
+  padding: 7px 18px;
   border-radius: 2px;
+  background: transparent;
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  font-weight: 700;
-  text-shadow: none;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  gap: 6px;
+  transition: background 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+              color 0.25s ease, 
+              box-shadow 0.25s ease, 
+              transform 0.2s ease;
+  text-shadow: 0 1px 5px rgba(0, 0, 0, 0.85);
+  cursor: pointer;
+  white-space: nowrap;
 }
 
-.nav-link.nav-home-active:hover {
-  background: #f4f4f5;
-  color: #000000 !important;
+/* Background Reveal Hover (Turns into solid white box with dark text, matching Image 1 & 2) */
+.nav-link:hover,
+.nav-link.nav-home-active,
+.nav-link.active[href="#hero"] {
+  background: #ffffff;
+  color: #111116 !important;
+  text-shadow: none;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
   transform: translateY(-1px);
 }
 
@@ -234,14 +229,82 @@ p, li, blockquote {
   height: 14px;
 }
 
+/* Dropdown Wrapper for ▾ More Recipes */
 .nav-dropdown-wrapper {
   position: relative;
+  display: inline-flex;
+  align-items: center;
 }
 
 .nav-dropdown-link {
   display: inline-flex;
   align-items: center;
+  gap: 5px;
+}
+
+/* Submenu Dropdown List (Matching Image 2) */
+.nav-submenu-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 140px;
+  list-style: none;
+  padding: 6px 0 0 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
   gap: 4px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(6px);
+  transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1), 
+              transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), 
+              visibility 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 1000;
+}
+
+/* Smooth reveal on hover or focus */
+.nav-dropdown-wrapper:hover .nav-submenu-list,
+.nav-dropdown-wrapper:focus-within .nav-submenu-list,
+.nav-dropdown-wrapper.open .nav-submenu-list {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.nav-submenu-list li {
+  width: 100%;
+}
+
+/* Submenu links with the same Background Reveal Hover (Cookies, Sandwich) */
+.submenu-link {
+  display: inline-block;
+  text-decoration: none;
+  color: #ffffff;
+  font-family: var(--font-serif);
+  font-size: 1.02rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  padding: 6px 18px;
+  border-radius: 2px;
+  background: transparent;
+  transition: background 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
+              color 0.25s ease, 
+              box-shadow 0.25s ease, 
+              transform 0.2s ease;
+  text-shadow: 0 1px 5px rgba(0, 0, 0, 0.85);
+  white-space: nowrap;
+}
+
+/* Submenu background reveal hover matching 2nd image (e.g. Sandwich highlighted in white box) */
+.submenu-link:hover {
+  background: #ffffff;
+  color: #111116 !important;
+  text-shadow: none;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  transform: translateY(-1px);
 }
 
 
@@ -977,10 +1040,11 @@ p, li, blockquote {
     padding: 16px 2rem;
   }
   .nav-links {
-    gap: 16px;
+    gap: 8px;
   }
   .nav-link {
     font-size: 0.94rem;
+    padding: 6px 12px;
   }
   .stats-container {
     grid-template-columns: repeat(2, 1fr);

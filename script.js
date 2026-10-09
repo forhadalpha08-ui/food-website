@@ -305,4 +305,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     requestAnimationFrame(animateGlow);
   }
+
+  // ==========================================================================
+  // 6. MORE RECIPES DROPDOWN TOGGLE (Hover + Click/Tap support)
+  // ==========================================================================
+  const moreRecipesToggle = document.getElementById('moreRecipesToggle');
+  const dropdownWrapper = document.querySelector('.nav-dropdown-wrapper');
+  if (moreRecipesToggle && dropdownWrapper) {
+    moreRecipesToggle.addEventListener('click', (e) => {
+      e.preventDefault();
+      dropdownWrapper.classList.toggle('open');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!dropdownWrapper.contains(e.target)) {
+        dropdownWrapper.classList.remove('open');
+      }
+    });
+  }
 });
